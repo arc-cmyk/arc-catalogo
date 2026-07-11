@@ -972,6 +972,32 @@
   .cat-group.single-row .cat-group-track{
     grid-template-rows:minmax(0, auto);
   }
+  /* Como no hay una segunda fila real que "preste" su alto para que la
+     card de arriba se expanda sin recortarse, se reserva ese espacio como
+     padding-bottom transparente en el contenedor con scroll (no en el
+     track, para no pintarlo con el color de línea). El overflow-x:auto
+     del contenedor recorta todo lo que exceda SU caja, así que agrandar
+     esa caja hacia abajo es lo que permite que el panel expandido se
+     superponga libremente en vez de cortarse.
+     Ese espacio ahora se reserva SOLO mientras hay una card abierta o en
+     hover dentro del grupo (vía :has), animado con transition: así no
+     queda hueco vacío permanente cuando ninguna card está expandida, y
+     el alto se ajusta solo si la categoría deja de ser single-row al
+     sumar más productos (la clase la controla el JS del catálogo). */
+  .cat-group.single-row .cat-group-scroll{
+    padding-bottom:6px;
+    transition:padding-bottom .5s cubic-bezier(.16,1,.3,1);
+  }
+  .cat-group.single-row .cat-group-scroll:has(.card:hover),
+  .cat-group.single-row .cat-group-scroll:has(.card.is-open){
+    padding-bottom:320px;
+  }
+  @media(max-width:640px){
+    .cat-group.single-row .cat-group-scroll:has(.card:hover),
+    .cat-group.single-row .cat-group-scroll:has(.card.is-open){
+      padding-bottom:380px;
+    }
+  }
 
   /* Con grid-auto-flow:column, las cards de índice par caen siempre en la
      fila de abajo: para que su panel de detalles no se salga por debajo
@@ -987,7 +1013,7 @@
   }
   .cat-group:not(.single-row) .cat-group-track .card:nth-child(even):hover .card-expand,
   .cat-group:not(.single-row) .cat-group-track .card:nth-child(even).is-open .card-expand{
-    box-shadow:0 -22px 44px rgba(12,19,16,0.2);
+    box-shadow:0 -24px 48px rgba(12,19,16,0.22), 0 -6px 16px rgba(12,19,16,0.12);
   }
 
   @media(max-width:640px){
@@ -1006,14 +1032,14 @@
     position:relative;
     z-index:1;
     transform-origin:top center;
-    transition:background .25s ease, transform .4s cubic-bezier(.4,0,.2,1), box-shadow .4s cubic-bezier(.4,0,.2,1), z-index 0s;
+    transition:background .3s ease, transform .55s cubic-bezier(.16,1,.3,1), box-shadow .55s cubic-bezier(.16,1,.3,1), z-index 0s;
   }
   .card:hover,
   .card.is-open{
     background:#EFEDE4;
     transform:scale(1.035);
     z-index:30;
-    box-shadow:0 18px 40px rgba(12,19,16,0.18);
+    box-shadow:0 20px 46px rgba(12,19,16,0.22), 0 4px 12px rgba(12,19,16,0.1);
   }
 
   /* panel que se revela al expandir la card: descripción, specs y CTA.
@@ -1030,15 +1056,15 @@
     opacity:0;
     overflow:hidden;
     pointer-events:none;
-    transition:max-height .45s cubic-bezier(.4,0,.2,1), opacity .3s ease, box-shadow .4s ease;
+    transition:max-height .55s cubic-bezier(.16,1,.3,1), opacity .35s ease, box-shadow .55s cubic-bezier(.16,1,.3,1);
   }
   .card:hover .card-expand,
   .card.is-open .card-expand{
     max-height:900px;
     opacity:1;
     pointer-events:auto;
-    box-shadow:0 22px 44px rgba(12,19,16,0.2);
-    transition:max-height .45s cubic-bezier(.4,0,.2,1), opacity .35s ease .08s, box-shadow .4s ease;
+    box-shadow:0 24px 48px rgba(12,19,16,0.22), 0 6px 16px rgba(12,19,16,0.12);
+    transition:max-height .55s cubic-bezier(.16,1,.3,1), opacity .4s ease .08s, box-shadow .55s cubic-bezier(.16,1,.3,1);
   }
   .card-expand-inner{
     padding:14px 24px 26px;
